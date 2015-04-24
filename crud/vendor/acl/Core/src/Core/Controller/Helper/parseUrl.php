@@ -3,10 +3,10 @@
  * Parse URL
  * @param string $url
  * @return array
- * 
+ *
  * array('controller', 'action', 'params'=>array());
- * 
- *  
+ *
+ *
     /                           -> controller = index, action = index, params = null
     /users                      -> controller = users, action = index, params = null
     /users/insert               -> controller = users, action = insert, params = null
@@ -15,7 +15,7 @@
     /users/kaka                 -> controller = error, action = 404, params = null
     /users/update/kaka/kaka2    -> controller = users, action = update, params = array(kaka=>kaka2)
     /users/update/kaka          -> controller = error, action = 400, params = null
- * 
+ *
  */
 
 function parseUrl($url)
@@ -34,17 +34,17 @@ function parseUrl($url)
             'select'
         )
     );
-     
+
     // Descomponer la url
     $components = explode('/', $url);
-     
+
     // Determinar el controlador
     if(file_exists(APPLICATION_PATH."/src/Application/Controller/".$components[1].".php"))
         $array['controller'] = $components[1];
     else if(isset($components[1]))
         $array['controller'] = 'error';
 
-     
+
     if ($components[1] != "")
     {
         // Determinar la accion
@@ -56,7 +56,7 @@ function parseUrl($url)
                 $array['controller'] = 'error';
                 $array['action'] = 404;
             }
-             
+
             if (isset($components[3]))
             {
                 // Si el número de parametros es impar
@@ -75,7 +75,7 @@ function parseUrl($url)
                     // Si existe controlador
                     if ($existcontroller) {
                         // Comprobar si existe accion
-                         
+
                         if (! in_array($array['action'], $controller[$array['controller']])) {
                             $array['controller'] = 'error';
                             $array['action'] = '404';
@@ -105,20 +105,20 @@ function parseUrl($url)
 //                 $array['action'] = 'index';
                 $array['params'] = null;
             }
-             
+
         }
-        else 
+        else
         {
             $array['action'] = 'index';
         }
-         
+
     }
     else {
         $array['controller'] = 'index';
         $array['action'] = 'index';
         $array['params'] = null;
     }
-    
-     
+
+
     return $array;
 }
