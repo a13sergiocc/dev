@@ -1,0 +1,9 @@
+<?php
+    $user = $viewData['user'];
+?>
+<form method ="POST" action="/crud/delete">
+    <p>Estas seguro que quieres borrar el usuario <?=$user['name'];?> con email <?=$user['email']; ?>?</p>
+    <input type="hidden" name="id" value="<?=$user['iduser'];?>"/>
+    <input name="borrar" value="SI" type ="submit"/>
+    <input name="borrar" value="NO" type ="submit"/>
+</form>
