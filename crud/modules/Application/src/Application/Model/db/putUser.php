@@ -1,6 +1,6 @@
 <?php
 
-function putUser($config, $id, $data)
+function putUser($config, $data)
 {
     $link = mysqli_connect($config['host'], $config['user'], $config['password']);
 
@@ -10,14 +10,15 @@ function putUser($config, $id, $data)
     $genders = array ('mujer'=>1, 'hombre'=>2, 'otro'=>3);
 
     $query = "UPDATE user SET
-					 name = '".$data['name']."',
-                     email='".$data['email']."',
-					 password='".$data['password']."',
-                     description='".$data['description']."',
+		name = '".$data['name']."',
+        email='".$data['email']."',
+		password='".$data['password']."',
+        description='".$data['description']."',
 
-                     gender_idgender=".$genders[$data['gender']].",
-                     city_idcity=".$cities[$data['city']]."
-                     where iduser=".$id;
+        gender_idgender=".$genders[$data['gender']].",
+        city_idcity=".$cities[$data['city']]."
+
+        where iduser=".$data['id'];
 
     $result = mysqli_query($link, $query);
 

@@ -30,7 +30,7 @@ return array(
         'filters'=> array('Stringtrim', 'StripTags', 'Escape'),
         'validators' => array ('lenghtMax'=>200,
             'lenghtMin'=>8,
-            'required'=>true            
+            'required'=>true
         )
     ),
     'birthdate'=>array(
@@ -41,18 +41,18 @@ return array(
     'description'=>array(
         'label'=>'Descripcion',
         'type'=>'textarea',
-        'filters'=> array('Stringtrim',  'Escape')        
+        'filters'=> array('Stringtrim',  'Escape')
     ),
     'gender'=>array(
         'label'=>'Sexo',
         'type'=>'radio',
         'options'=>array('Mujer'=>'mujer',
             'Hombre' =>'hombre',
-            'Otro'=>'otro'            
+            'Otro'=>'otro'
         ),
         'validators'=>array('inArray'=>true,
                             'required'=>true
-        )    
+        )
     ),
     'transport'=>array(
         'label'=>'Tipo de transporte',
@@ -84,8 +84,8 @@ return array(
     ),
     'submit'=>array(
         'label'=>'Enviar',
-        'type'=>'submit'                
+        'type'=>'submit'
     ),
-    
-    
+
+
 );

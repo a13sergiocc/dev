@@ -9,7 +9,7 @@ $users = $viewData['users'];
     <?php foreach($users as $id => $user):?>
         <tr>
            <?php
-            foreach ($user as $value):?>               
+            foreach ($user as $id => $value):?>               
                 <td><?php echo $value;?></td>
             <?php endforeach; ?>
             <td>

@@ -1,15 +1,7 @@
 <?php
-// $fieldsLine = $viewData['user'];
-
 $user = $viewData['user'];
-
-echo '<pre>';
-print_r($user);
-echo '</pre>';
-
 
 include (VENDOR_PATH.'/acl/Core/src/Core/Forms/RenderForm.php');
 $formDefinition = include (APPLICATION_PATH.'/src/Application/Forms/UserForm.php');
-
 
 echo(renderForm($formDefinition, '/crud/update', 'post', $user));

@@ -19,7 +19,7 @@ switch($request['action'])
 
     case 'insert':
         if($_POST) {
-            $user = setUser($_POST, $config['database']);
+            $user = setUser($config['database'], $_POST);
             header("Location: /crud/select");
         }
         else {
@@ -29,11 +29,21 @@ switch($request['action'])
 
     case 'update':
         if ($_POST) {
-            $user = putUser($config['database'], $_POST['id'], $_POST);
+            $user = putUser($config['database'], $_POST);
             header("Location: /crud/select");
         }
         else  {
+            $genders = array (1=>'mujer', 2=>'hombre', 3=>'otro');
+            $cities = array (1=>'scq', 2=>'vigo', 3=>'aco');
+
             $user = getUser($config['database'], $request['params']['id']);
+
+            // Change values to renderForm
+            $user["city"] = $cities[$user["city_idcity"]];
+            $user['gender'] = $genders[$user["gender_idgender"]];
+            $user['id'] = $user["iduser"];
+            $user['transport'] = "";
+
             $content = renderView("../modules/Application/views/crud/update.phtml", array('user'=>$user));
         }
     break;

@@ -13,237 +13,97 @@
 
 function renderForm($formDefinition, $action, $method='post', $data = array())
 {
-    //Crear string Html
-    //primero construir el form
-	$html = "<form method=\"".$method."\" action=\"".$action."\">"."\n";
-    $html.="<ul>";
-    //recorrer $formDefinition
+	if(!$data) {
+		foreach ($formDefinition as $key => $value) {
+			$data[$key] = "";
+		}
+	}
+
+	$html = "<form method=\"".$method."\" class=\"col-xs-6\" action=\"".$action."\">"."\n";
+
     foreach ($formDefinition as $key => $value) {
-        //Segun el tipo de formulario que recorre lo dibuja
-        //*cada vuelta movemos tambien una posicion el puntero de $data[] para escribir el valor que necesitamos
-    	switch($value['type']) {
-    	    //dibujar tipo ->nombre=$key,valor=current($data)
-    	    case 'hidden':
-    	             $html .="<input type=\"hidden\" name=\"".$key."\" value=\"".$data['iduser']."\">";  
-    	        break;
+
+		$html .= "<div class=\"form-group\">";
+
+		if(array_key_exists('label', $value)) {
+			$html .= "<label>".$value['label']."</label>";
+		}
+
+		switch($value['type'])
+		{
+			case 'hidden':
+    	        $html .= "<input type=\"hidden\" class=\"form-control\" name=\"".$key."\" value=\"".$data[$key]."\">"."\n";
+	        break;
+
     		case 'text':
-    		    $html.="<li>";
-    			$html .= "<label>".$value['label']."</label>"."\n";
-    			$html .= "<input type=\"text\" name=\"".$key."\" value=\"".current($data)."\" >"."\n";
-    			$html.="</li>";
+    			$html .= "<input type=\"text\" class=\"form-control\" name=\"".$key."\" value=\"".$data[$key]."\" >"."\n";
     	    break;
 
-    	    case 'radio':
-    	        $html.="<li>";
-    	        $html .= "<label>".$value['label']."</label><br />";
-    	        //necesitamos un formulario hidden porque si no se selecciona nada el submit no envia los valores de los radios
-    	        //$html .="<input type=\"hidden\" name=\"".$key."\" value=\"\">";
-    	        //recorremos las opciones para dibujarlas
-    	        foreach($value['options'] as $key2 => $value2)
-    	        {
-                    //comprobamos si es un update
-    	            if(empty($_GET)=="")
-    	            {
-    	                //si es un update seleccionamos los valores antiguos
-    	                if(current($data)==$value2)
-    	                {
-    	                   $html .= "<input type=\"radio\" name=\"".$key."\" value=\"".current($data)."\" checked>";
-    	                   $html .= $key2."<br />"."\n";
-    	                }
-    	                else
-    	                {
-    	                    $html .= "<input type=\"radio\" name=\"".$key."\" value=\"".$value2."\">";
-    	                    $html .= $key2."<br />"."\n";
-    	                }
-    	            }
-    	            //si no es un update comprobamos si es una opcion por defecto para seleccionarla
-    	            elseif ($key2 == 'default_option')
-    	            {
-    	                $html .= "<input type=\"radio\" name=\"".$key."\" value=\"".$value2."\" checked>";
-    	                $html .= $key2."<br />"."\n";
-    	            }
-    	            else
-    	            {
-    	                $html .= "<input type=\"radio\" name=\"".$key."\" value=\"".$value2."\">";
-    	                $html .= $key2."<br />"."\n";
-    	            }
-
-    	        }
-    	        $html.="</li>";
-    	        break;
-
     		case 'password':
-    		    $html.="<li>";
-        		    $html .= "<label>".$value['label']."</label>";
-        			$html .= "<input type='password' name=\"".$key."\" value=\"".current($data)."\" />"."\n";
-    			$html.="</li>";
-    			break;
-    		case 'textarea':
-    		    $html.="<li>";
-    			$html .= "<label>".$value['label']."</label>"."\n";
-    			$html .= "<textarea name=\"".$key."\" >".current($data)."</textarea>"."\n";
-    			$html.="</li>";
-    			break;
-    		case 'email':
-    		    $html.="<li>";
-    			$html .= "<label>".$value['label']."</label>";
-    			$html .= "<input type=\"email\" name=\"".$key."\" value=\"".current($data)."\" />"."\n";
-    			$html.="</li>";
-    			break;
+        		$html .= "<input type='password' class=\"form-control\" name=\"".$key."\" value=\"".$data[$key]."\" />"."\n";
+    		break;
+
+			case 'textarea':
+    			$html .= "<textarea class=\"form-control\" name=\"".$key."\" >".$data[$key]."</textarea>"."\n";
+    		break;
+
+			case 'email':
+    			$html .= "<input type=\"email\" class=\"form-control\" name=\"".$key."\" value=\"".$data[$key]."\" />"."\n";
+    		break;
 
             case 'date':
-                $html.="<li>";
-    			$html .= "<label>".$value['label']."</label>";
+    			$html .= "<input type=\"date\" class=\"form-control\" name=\"".$key."\" value=\"".$data[$key]."\" />"."\n";
+			break;
 
-    			$html .= "<input type=\"date\" name=\"".$key."\" value=\"".current($data)."\" />"."\n";
-    			$html.="</li>";
-    			break;
+    	    case 'radio':
+				foreach($value['options'] as $radio => $radioValue) {
+					$html .= "<br/><input type=\"radio\" name=\"".$key."\" value=\"".$radioValue."\"";
+					$html .= ($radioValue == $data[$key]) ? "checked />" : ">";
+					$html .= " ".$radio."\n";
+				}
+	        break;
 
     		case 'checkbox':
-    			$html.="<li>";
-    			$html .= "<label>".$value['label']."</label><br />";
-    			//necesitamos un formulario hidden porque si no se selecciona nada el submit no envia los valores de los checkbox
-    			//$html .="<input type=\"hidden\" name=\"".$key."[]"."\" value=\"\">";
-    			$stringdata=current($data);
-    			//necesitamos extraer las opciones entre las /
-    			$data2=explode("|", $stringdata);
-    			    //recorremos las opciones para dibujarlas
-    			    foreach($value['options'] as $key2 => $value2)
-    			    {
-    			        //comprobamos si es un update
-    			        if(empty($_GET)=="")
-    			        {
-    			            //si es un update seleccionamos los valores antiguos
-    			            if(current($data2)==$value2)
-    			            {
-    			                $html .= "<input type=\"checkbox\" name=\"".$key."[]"."\" value=\"".current($data2)."\" checked>";
-    			                $html .= $key2."<br />"."\n";
-    			                next($data2);
-    			            }
-    			            else
-    			            {
-    			                $html .= "<input type=\"checkbox\" name=\"".$key."[]"."\" value=\"".$value2."\">";
-    			                $html .= $key2."<br />"."\n";
-    			            }
-    			        }
-    			        //si no es un update comprobamos si es una opcion por defecto para seleccionarla
-    			        elseif ($key2 == 'default_option')
-    			        {
-    			            $html .= "<input type=\"checkbox\" name=\"".$key."[]"."\" value=\"".current($data)."\" checked>";
-    			            $html .= $key2."<br />"."\n";
-    			        }
-    			        else
-    			        {
-    			            $html .= "<input type=\"checkbox\" name=\"".$key."[]"."\" value=\"".$value2."\">";
-    			            $html .= $key2."<br />"."\n";
-    			        }
-
-
-    			    }
-    			    $html.="</li>";
-    			    break;
+				foreach($value['options'] as $checkbox => $checkboxValue) {
+					$html .= "<br/><input type=\"checkbox\" name=\"".$key."\" value=\"".$checkboxValue."\"";
+					$html .= ($checkboxValue == $data[$key]) ? "checked />" : ">";
+					$html .= " ".$checkbox."\n";
+				}
+		    break;
 
     		case 'select':
-    			 $html.="<li>";
-    			 $html .= "<label>".$value['label']."</label><br />";
-    			 $html .="<select name=\"".$key."\"><br />";
-    			    foreach($value['options'] as $key2 => $value2)
-    			    {
-    			        //recorremos las opciones para dibujarlas
-    			        if(empty($_GET)=="")
-    			        {
-    			            //comprobamos si es un update
-    			            if(current($data)==$value2)
-    			            {
-    			                $html .= "<option value=\"".$value2."\"selected=\"selected\">";
-    			                $html .= $key2."</option><br />"."\n";
-    			            }
-    			            else
-    			            {
-    			                $html .= "<option value=\"".$value2."\">";
-    			                $html .= $key2."</option><br />"."\n";
-    			            }
-    			        }
-    			        //si no es un update vemos si hay opciones por defecto
-    			        elseif ($key2 == 'default_option')
-    			        {
-    			            $html .= "<option value=\"".$value2."\"selected=\"selected\">";
-    			            $html .= $key2."</option><br />"."\n";
-    			        }
-    			        else
-    			        {
-    			            $html .= "<option value=\"".$value2."\">";
-    			            $html .= $key2."</option><br />"."\n";
-    			        }
+    			$html .= "<select name=\"".$key."\" class=\"form-control\"><br />";
 
-    			    }
-    			     $html.="</select></li>";
-    			     break;
-    	   case 'selectmultiple':
-    			 $html.="<li>";
-    			 $html .= "<label>".$value['label']."</label><br />";
-    			 //necesitamos un formulario hidden porque si no se selecciona nada el submit no envia los valores de los select multiple
-    			 //$html .="<input type=\"hidden\" name=\"".$key."[]"."\" value=\"\">";
-    			 $html .="<select multiple name=\"".$key."[]"."\"><br />";
-    			 $stringdata=current($data);
-    			 //necesitamos extraer las opciones entre las /
-    			 $data2=explode("|", $stringdata);
-    			    foreach($value['options'] as $key2 => $value2)
-    			    {
+				foreach($value['options'] as $option => $optionValue) {
+					$html .= "<option value=\"".$optionValue."\"";
+					$html .= ($optionValue == $data[$key]) ? "selected=\"selected\">" : ">";
+					$html .= $option;
+					$html .= "</option><br/>"."\n";
+				}
 
+				$html .= "</select>";
+    		break;
 
-    			        //si es un update seleccionamos los valores antiguos
-    			         if(empty($_GET)=="")
-    			         {
-    			                 //Los + S_GET los convierte en espacios,hay que volver a convertirlos en +(c++)
-    			                 $selectedOption=str_replace(" ","+",current($data2));
-    			                 //si es un update seleccionamos los valores antiguos
-    			                 if($selectedOption==$value2)
-    			                 {
-    			                    $html .= "<option value=\"".$value2."\"selected=\"selected\" >";
-    			                    $html .= $key2."</option><br />"."\n";
-    			                    next($data2);
+			case 'selectmultiple':
+			 	$html .="<br/><select multiple class=\"form-control\" name=\"".$key."[]"."\"><br />";
 
+				foreach($value['options'] as $option => $value) {
+					$html .= "<option value=\"".$value."\">";
+					$html .= $option."</option><br />"."\n";
+				}
 
-    			                 }
-    			                 else
-    			                 {
-    			                     $html .= "<option value=\"".$value2."\">";
-    			                     $html .= $key2."</option><br />"."\n";
+    			$html.="</select>";
+    		break;
 
-    			                 }
-
-
-    			         }
-    			        //si no es un update comprobamos si es una opcion por defecto para seleccionarla
-    			        elseif ($key2== 'default_option')
-    			        {
-    			            $html .= "<option value=\"".$value2."\"selected=\"selected\" >";
-    			            $html .= $key2."</option><br />"."\n";
-    			        }
-    			        else
-    			        {
-    			                 $html .= "<option value=\"".$value2."\">";
-    			                 $html .= $key2."</option><br />"."\n";
-    			        }
-    			     }
-
-    			     $html.="</select></li>";
-    			     break;
     		case 'submit':
-    		     //necesitamos un boton para enviar los datos a procesa.php
-    			 $html.="<input type=\"submit\" name=\"".$value2."\"/>"."\n";
-    			 break;
-
-
-
-
+    			$html .= "<br/><input type=\"submit\" name=\"".$key."\"/>"."\n";
+ 		 	break;
     	}
-    	       //nos movemos una posicion dentro del array $data
-    	       next($data);
 
+		$html .= "</div>";
     }
-    $html.="</ul>";
+
     $html .= "</form>";
-    return $html;
+
+	return $html;
 }
