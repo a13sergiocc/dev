@@ -1,13 +1,17 @@
 <?php
-
-include (VENDOR_PATH."/acl/Core/src/Core/View/renderView.php");
-
 include (APPLICATION_PATH."/src/Application/Model/db/getUsers.php");
 include (APPLICATION_PATH."/src/Application/Model/db/getUser.php");
 include (APPLICATION_PATH."/src/Application/Model/db/setUser.php");
 include (APPLICATION_PATH."/src/Application/Model/db/deleteUser.php");
 include (APPLICATION_PATH."/src/Application/Model/db/patchUser.php");
 include (APPLICATION_PATH."/src/Application/Model/db/putUser.php");
+
+include (VENDOR_PATH."/acl/Core/src/Core/View/renderView.php");
+include (VENDOR_PATH."/acl/Core/src/Core/Forms/FilterForm.php");
+
+$userForm = include (APPLICATION_PATH."/src/Application/Forms/UserForm.php");
+
+
 
 switch($request['action'])
 {
@@ -19,7 +23,8 @@ switch($request['action'])
 
     case 'insert':
         if($_POST) {
-            $user = setUser($config['database'], $_POST);
+            $data = FilterForm($userForm, $_POST);
+            $user = setUser($config['database'], $data);
             header("Location: /crud/select");
         }
         else {

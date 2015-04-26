@@ -1,12 +1,10 @@
 <?php
-
-include ("../vendor/acl/Core/src/Core/Controller/Helper/parseUrl.php");
-include ("../vendor/acl/Core/src/Core/readConfig.php");
-
 define ("APPLICATION_PATH", "../modules/Application");
 define ("VENDOR_PATH", "../vendor");
 define ("ROOT_PATH", "../");
 
+include (VENDOR_PATH."/acl/Core/src/Core/Controller/Helper/parseUrl.php");
+include (VENDOR_PATH."/acl/Core/src/Core/readConfig.php");
 
 $config = readConfig('../configs/application.config.php');
 $request = parseUrl($_SERVER['REQUEST_URI']);
