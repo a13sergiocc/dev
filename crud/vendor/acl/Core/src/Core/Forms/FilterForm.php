@@ -19,16 +19,13 @@ function FilterForm($formDefinition, $data)
                 switch ($filter)
                 {
                     case 'Stringtrim':
-                        $data[$field] = trim(preg_replace('/\s+/', '', $value));
+                        $data[$field] = preg_replace('/\s+/', '', trim($value));
                     break;
                     case 'StripTags':
                         $data[$field] = strip_tags($value);
                     break;
                     case 'Escape':
-                        $data[$field] = htmlentities($value, ENT_COMPAT);
-                    break;
-                    case 'SpecialChar':
-                        $data[$field] = htmlspecialchars($value);
+                        $data[$field] = htmlspecialchars($value, ENT_QUOTES);
                     break;
                 }
             }
