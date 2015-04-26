@@ -87,9 +87,11 @@ function renderForm($formDefinition, $action, $method='post', $data = array())
 			case 'selectmultiple':
 			 	$html .="<br/><select multiple class=\"form-control\" name=\"".$key."[]"."\"><br />";
 
-				foreach($value['options'] as $option => $value) {
-					$html .= "<option value=\"".$value."\">";
-					$html .= $option."</option><br />"."\n";
+				foreach($value['options'] as $option => $optionValue) {
+					$html .= "<option value=\"".$optionValue."\"";
+					$html .= ($optionValue == $data[$key]) ? "selected=\"selected\">" : ">";
+					$html .= $option;
+					$html .= "</option><br/>"."\n";
 				}
 
     			$html.="</select>";

@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 include(VENDOR_PATH.'/acl/Core/src/Core/Forms/RenderForm.php');
 
 $userForm = include (APPLICATION_PATH.'/src/Application/Forms/UserForm.php');
 
-$html = renderForm($userForm, '/users/insert', 'POST', array('id'=>0));
+$html = renderForm($userForm, '/users/insert', 'POST', $_POST);
 
 
 echo $html;

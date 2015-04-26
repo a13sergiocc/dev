@@ -38,11 +38,12 @@ switch($request['action'])
 
             $user = getUser($config['database'], $request['params']['id']);
 
-            // Change values to renderForm
+            // Values for correct rendeForm performance
             $user["city"] = $cities[$user["city_idcity"]];
             $user['gender'] = $genders[$user["gender_idgender"]];
             $user['id'] = $user["iduser"];
             $user['transport'] = "";
+            $user['code'] = "";
 
             $content = renderView("../modules/Application/views/crud/update.phtml", array('user'=>$user));
         }

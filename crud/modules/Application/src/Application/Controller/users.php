@@ -1,30 +1,28 @@
 <?php
 
 include (VENDOR_PATH."/acl/Core/src/Core/View/renderView.php");
-include (APPLICATION_PATH."/src/Application/Model/getUsers.php");
-include (APPLICATION_PATH."/src/Application/Model/getUser.php");
-include (APPLICATION_PATH."/src/Application/Model/setUser.php");
-include (APPLICATION_PATH."/src/Application/Model/deleteUser.php");
-include (APPLICATION_PATH."/src/Application/Model/patchUser.php");
-include (APPLICATION_PATH."/src/Application/Model/putUser.php");
+include (APPLICATION_PATH."/src/Application/Model/text/getUsers.php");
+include (APPLICATION_PATH."/src/Application/Model/text/getUser.php");
+include (APPLICATION_PATH."/src/Application/Model/text/setUser.php");
+include (APPLICATION_PATH."/src/Application/Model/text/deleteUser.php");
+include (APPLICATION_PATH."/src/Application/Model/text/patchUser.php");
+include (APPLICATION_PATH."/src/Application/Model/text/putUser.php");
 
 switch($request['action'])
 {
     case 'index':
     case 'select':
-        $users = getUsers();        
-        $content = renderView("../modules/Application/views/users/select.phtml",
-                              array('users'=>$users)
-                    );   
+        $users = getUsers();
+        $content = renderView("../modules/Application/views/users/select.phtml", array('users'=>$users));
     break;
 
-    case 'insert':        
+    case 'insert':
         if($_POST)
-        {              
+        {
             $user = setUser($_POST);
             header("Location: /users/select");
         }
-        else 
+        else
         {
             $content = renderView("../modules/Application/views/users/insert.phtml");
         }
@@ -38,11 +36,9 @@ switch($request['action'])
             header("Location: /users/select");
         }
         else
-        {                       
+        {
             $user = getUser($request['params']['id']);
-            $content = renderView("../modules/Application/views/users/update.phtml",
-                              array('fieldsLine'=>$user)
-                    );
+            $content = renderView("../modules/Application/views/users/update.phtml", array('fieldsLine'=>$user));
         }
     break;
 
@@ -53,19 +49,15 @@ switch($request['action'])
             if ($_POST['borrar'] === "SI")
             {
                 deleteUser($_POST['id']);
-            }               
-            header("Location: /users/select");    
+            }
+            header("Location: /users/select");
         }
         else
-        {     
+        {
             $user = getUser($request['params']['id']);
-            $content = renderView("../modules/Application/views/users/delete.phtml",
-                array('user'=>$user)
-            );
+            $content = renderView("../modules/Application/views/users/delete.phtml", array('user'=>$user));
         }
     break;
 }
-
-// $content = "kaka";
 
 include ("../modules/Application/views/layouts/dashboard.phtml");

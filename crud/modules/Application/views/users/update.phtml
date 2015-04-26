@@ -1,4 +1,4 @@
-<?php 
+<?php
 $fieldsLine = $viewData['fieldsLine'];
 
 include (VENDOR_PATH.'/acl/Core/src/Core/Forms/RenderForm.php');
@@ -11,7 +11,5 @@ foreach ($formDefinition as $fieldName => $fieldAttributes)
     $data[$fieldName] = $valuesField;
     $userFieldsIndex = $userFieldsIndex + 1;
 }
-
-$data['id'] = $id;
 
 echo(renderForm($formDefinition, '/users/update', 'post', $data));
